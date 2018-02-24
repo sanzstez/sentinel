@@ -3,27 +3,24 @@
 """
 import sys
 import os
-from omegacoin_config import OmegaConfig
+from lilicoin_config import LiliConfig
 
 default_sentinel_config = os.path.normpath(
     os.path.join(os.path.dirname(__file__), '../sentinel.conf')
 )
 sentinel_config_file = os.environ.get('SENTINEL_CONFIG', default_sentinel_config)
-sentinel_cfg = OmegaConfig.tokenize(sentinel_config_file)
+sentinel_cfg = LiliConfig.tokenize(sentinel_config_file)
 sentinel_version = "1.1.0"
-min_omegacoind_proto_version_with_sentinel_ping = 70207
+min_lilicoind_proto_version_with_sentinel_ping = 70207
 
 
-def get_omegacoin_conf():
+def get_lilicoin_conf():
     home = os.environ.get('HOME')
 
-    omegacoin_conf = os.path.join(home, ".omegacoincore/omegacoin.conf")
-    if sys.platform == 'darwin':
-        omegacoin_conf = os.path.join(home, "Library/Application Support/OmegaCoinCore/omegacoin.conf")
+    lilicoin_conf = os.path.join(home, ".lili/lili.conf")
+    lilicoin_conf = sentinel_cfg.get('lilicoin_conf', lilicoin_conf)
 
-    omegacoin_conf = sentinel_cfg.get('omegacoin_conf', omegacoin_conf)
-
-    return omegacoin_conf
+    return lilicoin_conf
 
 
 def get_network():
@@ -79,6 +76,6 @@ def get_db_conn():
     return db
 
 
-omegacoin_conf = get_omegacoin_conf()
+lilicoin_conf = get_lilicoin_conf()
 network = get_network()
 db = get_db_conn()

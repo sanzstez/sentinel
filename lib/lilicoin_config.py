@@ -7,7 +7,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'lib'))
 from misc import printdbg
 
 
-class OmegaConfig():
+class LiliConfig():
 
     @classmethod
     def slurp_config_file(self, filename):
@@ -34,7 +34,7 @@ class OmegaConfig():
         creds = {key: value for (key, value) in match}
 
         # standard Omega defaults...
-        default_port = 7778 if (network == 'mainnet') else 17778
+        default_port = 33000 if (network == 'mainnet') else 33000
 
         # use default port for network if not specified in omegacoin.conf
         if not ('port' in creds):

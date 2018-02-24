@@ -19,26 +19,26 @@ class GovernanceClass(object):
         return self.governance_object
 
     # pass thru to GovernanceObject#vote
-    def vote(self, omegacoind, signal, outcome):
-        return self.go.vote(omegacoind, signal, outcome)
+    def vote(self, lilicoind, signal, outcome):
+        return self.go.vote(lilicoind, signal, outcome)
 
     # pass thru to GovernanceObject#voted_on
     def voted_on(self, **kwargs):
         return self.go.voted_on(**kwargs)
 
-    def vote_validity(self, omegacoind):
+    def vote_validity(self, lilicoind):
         if self.is_valid():
             printdbg("Voting valid! %s: %d" % (self.__class__.__name__, self.id))
-            self.vote(omegacoind, models.VoteSignals.valid, models.VoteOutcomes.yes)
+            self.vote(lilicoind, models.VoteSignals.valid, models.VoteOutcomes.yes)
         else:
             printdbg("Voting INVALID! %s: %d" % (self.__class__.__name__, self.id))
-            self.vote(omegacoind, models.VoteSignals.valid, models.VoteOutcomes.no)
+            self.vote(lilicoind, models.VoteSignals.valid, models.VoteOutcomes.no)
 
     def get_submit_command(self):
         object_fee_tx = self.go.object_fee_tx
 
-        import omegacoinlib
-        obj_data = omegacoinlib.SHIM_serialise_for_omegacoind(self.serialise())
+        import lilicoinlib
+        obj_data = lilicoinlib.SHIM_serialise_for_lilicoind(self.serialise())
 
         cmd = ['gobject', 'submit', '0', '1', str(int(time.time())), obj_data, object_fee_tx]
 
@@ -55,12 +55,12 @@ class GovernanceClass(object):
             "AbstainCount": self.go.abstain_count,
         }
 
-        # return a dict similar to omegacoind "gobject list" output
+        # return a dict similar to lilicoind "gobject list" output
         return {self.object_hash: dikt}
 
     def get_submit_command(self):
-        import omegacoinlib
-        obj_data = omegacoinlib.SHIM_serialise_for_omegacoind(self.serialise())
+        import lilicoinlib
+        obj_data = lilicoinlib.SHIM_serialise_for_lilicoind(self.serialise())
 
         # new objects won't have parent_hash, revision, etc...
         cmd = ['gobject', 'submit', '0', '1', str(int(time.time())), obj_data]
@@ -71,15 +71,15 @@ class GovernanceClass(object):
 
         return cmd
 
-    def submit(self, omegacoind):
+    def submit(self, lilicoind):
         # don't attempt to submit a superblock unless a masternode
         # note: will probably re-factor this, this has code smell
-        if (self.only_masternode_can_submit and not omegacoind.is_masternode()):
+        if (self.only_masternode_can_submit and not lilicoind.is_masternode()):
             print("Not a masternode. Only masternodes may submit these objects")
             return
 
         try:
-            object_hash = omegacoind.rpc_command(*self.get_submit_command())
+            object_hash = lilicoind.rpc_command(*self.get_submit_command())
             printdbg("Submitted: [%s]" % object_hash)
         except JSONRPCException as e:
             print("Unable to submit: %s" % e.message)
@@ -95,9 +95,9 @@ class GovernanceClass(object):
 
         return binascii.hexlify(simplejson.dumps((obj_type, self.get_dict()), sort_keys=True).encode('utf-8')).decode('utf-8')
 
-    def omegacoind_serialise(self):
-        import omegacoinlib
-        return omegacoinlib.SHIM_serialise_for_omegacoind(self.serialise())
+    def lilicoind_serialise(self):
+        import lilicoinlib
+        return lilicoinlib.SHIM_serialise_for_lilicoind(self.serialise())
 
     @classmethod
     def serialisable_fields(self):

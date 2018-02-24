@@ -9,17 +9,17 @@ import config
 from models import Superblock, Proposal, GovernanceObject, Setting, Signal, Vote, Outcome, Watchdog
 from models import VoteSignals, VoteOutcomes
 from peewee import PeeweeException  # , OperationalError, IntegrityError
-from omegacoind import OmegaDaemon
-import omegacoinlib
+from lilicoind import LiliDaemon
+import lilicoinlib
 from decimal import Decimal
-omegacoind = OmegaDaemon.from_omegacoin_conf(config.omegacoin_conf)
+lilicoind = LiliDaemon.from_lilicoin_conf(config.lilicoin_conf)
 import misc
 # ==============================================================================
 # do stuff here
 
 pr = Proposal(
     name='proposal7',
-    url='https://omegacentral.com/proposal7',
+    url='https://lilicentral.com/proposal7',
     payment_address='yTC62huR4YQEPn9AJHjnQxxreHSbgAoatV',
     payment_amount=39.23,
     start_epoch=1483250400,
@@ -39,7 +39,7 @@ pr = Proposal(
 # also, create the `within_window` or similar method & use that.
 #
 bh = 131112
-bh_epoch = omegacoind.block_height_to_epoch(bh)
+bh_epoch = lilicoind.block_height_to_epoch(bh)
 
 fudge = 72000
 window_start = 1483689082 - fudge
@@ -56,7 +56,7 @@ else:
     print("Within window, we're good!")
 
 # pdb.set_trace()
-# omegacoind.get_object_list()
+# lilicoind.get_object_list()
 # ==============================================================================
 # pdb.set_trace()
 1
