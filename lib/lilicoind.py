@@ -32,9 +32,9 @@ class LiliDaemon():
 
     @classmethod
     def from_lilicoin_conf(self, lilicoin_dot_conf):
-        from lilicoin_config import liliConfig
-        config_text = liliConfig.slurp_config_file(lilicoin_dot_conf)
-        creds = liliConfig.get_rpc_creds(config_text, config.network)
+        from lilicoin_config import LiliConfig
+        config_text = LiliConfig.slurp_config_file(lilicoin_dot_conf)
+        creds = LiliConfig.get_rpc_creds(config_text, config.network)
 
         return self(**creds)
 
